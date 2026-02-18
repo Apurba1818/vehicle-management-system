@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:5000"
+  baseURL: "https://vehicle-management-system.onrender.com"   // your render backend URL
 });
 
 api.interceptors.request.use((config) => {
@@ -15,3 +15,4 @@ api.interceptors.request.use((config) => {
 });
 
 export default api;
+

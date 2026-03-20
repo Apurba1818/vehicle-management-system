@@ -170,7 +170,7 @@ export default function Income() {
   }, []);
 
   const loadIncome = async () => {
-    const res = await api.get("http://localhost:5000/income");
+    const res = await api.get("/income");
     setIncomeData(res.data);
   };
 

@@ -428,17 +428,17 @@ export default function DailyLogs() {
   }, []);
 
   const fetchLogs = async () => {
-    const res = await api.get("http://localhost:5000/logs");
+    const res = await api.get("/logs");
     setLogs(res.data);
   };
 
   const fetchVehicles = async () => {
-    const res = await api.get("http://localhost:5000/vehicles");
+    const res = await api.get("/vehicles");
     setVehicles(res.data);
   };
 
   const fetchDrivers = async () => {
-    const res = await api.get("http://localhost:5000/drivers");
+    const res = await api.get("/drivers");
     setDrivers(res.data);
   };
 
@@ -453,7 +453,7 @@ export default function DailyLogs() {
       return;
     }
 
-    await api.post("http://localhost:5000/logs", {
+    await api.post("/logs", {
       date: entry.date,
       vehicle: entry.vehicle,
       driver: entry.driver,

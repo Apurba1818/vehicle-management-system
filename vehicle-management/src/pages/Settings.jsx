@@ -256,7 +256,7 @@ export default function Settings() {
   }, []);
 
   const loadSettings = async () => {
-    const res = await api.get("http://localhost:5000/settings");
+    const res = await api.get("/settings");
     if(res.data){
       setSettings(res.data);
     }
@@ -267,7 +267,7 @@ export default function Settings() {
   };
 
   const saveSettings = async () => {
-    await api.post("http://localhost:5000/settings", settings);
+    await api.post("/settings", settings);
     alert("Settings saved");
   };
 

@@ -160,7 +160,7 @@ export default function Vehicles() {
   }, []);
 
   const fetchVehicles = async () => {
-    const res = await api.get("http://localhost:5000/vehicles");
+    const res = await api.get("/vehicles");
     setVehicles(res.data);
   };
 
@@ -171,10 +171,10 @@ export default function Vehicles() {
   const submitVehicle = async () => {
 
     if(editingId){
-      await api.put(`http://localhost:5000/vehicles/${editingId}`, form);
+      await api.put(`/vehicles/${editingId}`, form);
       setEditingId(null);
     }else{
-      await api.post("http://localhost:5000/vehicles", form);
+      await api.post("/vehicles", form);
     }
 
     setForm({ number:"", type:"", status:"" });
@@ -187,7 +187,7 @@ export default function Vehicles() {
   };
 
   const deleteVehicle = async (id) => {
-    await api.delete(`http://localhost:5000/vehicles/${id}`);
+    await api.delete(`/vehicles/${id}`);
     fetchVehicles();
   };
 

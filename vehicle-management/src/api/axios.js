@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://vehicle-management-system.onrender.com"   // your render backend URL
+  baseURL: "https://vehicle-management-system-6ovl.onrender.com"   // your render backend URL
 });
 
 api.interceptors.request.use((config) => {

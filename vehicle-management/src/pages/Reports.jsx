@@ -133,18 +133,115 @@
 //   textAlign: "center"
 // };
 
+// import { useEffect, useState } from "react";
+// import api from "../api/axios";
+
+// export default function Reports() {
+
+//   const [reports, setReports] = useState([]);
+//   const [monthFilter, setMonthFilter] = useState("");
+
+//   useEffect(() => {
+//     fetchReports();
+//   }, []);
+
+//   const fetchReports = async () => {
+//     try {
+//       const res = await api.get("/reports");
+//       setReports(res.data);
+//     } catch (err) {
+//       console.log(err);
+//     }
+//   };
+
+//   /* Filter logic */
+//   const filteredReports = monthFilter
+//     ? reports.filter(r => r.month === monthFilter)
+//     : reports;
+
+//   return (
+//     <div style={{ padding: "20px" }}>
+
+//       <h2>Reports</h2>
+//       <p>Monthly Profit & Loss</p>
+
+//       {/* Month Filter */}
+//       <div style={{ marginBottom: "20px" }}>
+//         <label>Select Month: </label>
+//         <input
+//           type="month"
+//           value={monthFilter}
+//           onChange={(e) => setMonthFilter(e.target.value)}
+//           style={{ padding: "8px", marginLeft: "10px" }}
+//         />
+//       </div>
+
+//       <table style={tableStyle}>
+//         <thead>
+//           <tr>
+//             <th style={th}>Month</th>
+//             <th style={th}>Total Income</th>
+//             <th style={th}>Total Expense</th>
+//             <th style={th}>Profit / Loss</th>
+//           </tr>
+//         </thead>
+
+//         <tbody>
+//           {filteredReports.map((r, index) => (
+//             <tr key={index}>
+//               <td style={td}>{r.month}</td>
+//               <td style={td}>₹ {r.totalIncome}</td>
+//               <td style={td}>₹ {r.totalExpense}</td>
+//               <td style={{
+//                 ...td,
+//                 color: r.profit >= 0 ? "green" : "red",
+//                 fontWeight: "bold"
+//               }}>
+//                 ₹ {r.profit}
+//               </td>
+//             </tr>
+//           ))}
+//         </tbody>
+//       </table>
+
+//     </div>
+//   );
+// }
+
+// /* Styles */
+
+// const tableStyle = {
+//   width: "100%",
+//   borderCollapse: "collapse",
+//   marginTop: "20px"
+// };
+
+// const th = {
+//   border: "1px solid #ccc",
+//   padding: "12px",
+//   background: "#eee",
+//   textAlign: "center"
+// };
+
+// const td = {
+//   border: "1px solid #ccc",
+//   padding: "12px",
+//   textAlign: "center"
+// };
+
 import { useEffect, useState } from "react";
 import api from "../api/axios";
-
+import "../styles/vms.css";
+ 
 export default function Reports() {
-
+ 
   const [reports, setReports] = useState([]);
   const [monthFilter, setMonthFilter] = useState("");
-
+ 
   useEffect(() => {
     fetchReports();
   }, []);
-
+ 
   const fetchReports = async () => {
     try {
       const res = await api.get("/reports");
@@ -153,79 +250,99 @@ export default function Reports() {
       console.log(err);
     }
   };
-
-  /* Filter logic */
+ 
   const filteredReports = monthFilter
     ? reports.filter(r => r.month === monthFilter)
     : reports;
-
+ 
+  const totals = filteredReports.reduce(
+    (acc, r) => ({
+      income:  acc.income  + Number(r.totalIncome  || 0),
+      expense: acc.expense + Number(r.totalExpense || 0),
+      profit:  acc.profit  + Number(r.profit       || 0),
+    }),
+    { income: 0, expense: 0, profit: 0 }
+  );
+ 
   return (
-    <div style={{ padding: "20px" }}>
-
-      <h2>Reports</h2>
-      <p>Monthly Profit & Loss</p>
-
+    <div className="page">
+      <div className="page-header">
+        <h1 className="page-title">Reports</h1>
+        <p className="page-subtitle">Monthly Profit &amp; Loss</p>
+      </div>
+ 
+      {/* Summary cards */}
+      <div className="stat-grid" style={{ marginBottom:24 }}>
+        <div className="stat-card">
+          <span className="stat-label">Total Income</span>
+          <div className="stat-value" style={{ color:"var(--green)" }}>₹ {totals.income}</div>
+        </div>
+        <div className="stat-card">
+          <span className="stat-label">Total Expense</span>
+          <div className="stat-value" style={{ color:"var(--amber)" }}>₹ {totals.expense}</div>
+        </div>
+        <div className="stat-card">
+          <span className="stat-label">Net Profit / Loss</span>
+          <div className="stat-value" style={{ color: totals.profit >= 0 ? "var(--green)" : "var(--red)" }}>
+            ₹ {totals.profit}
+          </div>
+        </div>
+      </div>
+ 
       {/* Month Filter */}
-      <div style={{ marginBottom: "20px" }}>
-        <label>Select Month: </label>
+      <div className="filter-bar">
+        <span className="filter-label">Filter by Month:</span>
         <input
+          className="form-input"
           type="month"
           value={monthFilter}
           onChange={(e) => setMonthFilter(e.target.value)}
-          style={{ padding: "8px", marginLeft: "10px" }}
+          style={{ maxWidth: 180 }}
         />
+        {monthFilter && (
+          <button
+            className="btn btn-sm btn-edit"
+            onClick={() => setMonthFilter("")}
+          >
+            Clear
+          </button>
+        )}
       </div>
-
-      <table style={tableStyle}>
-        <thead>
-          <tr>
-            <th style={th}>Month</th>
-            <th style={th}>Total Income</th>
-            <th style={th}>Total Expense</th>
-            <th style={th}>Profit / Loss</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {filteredReports.map((r, index) => (
-            <tr key={index}>
-              <td style={td}>{r.month}</td>
-              <td style={td}>₹ {r.totalIncome}</td>
-              <td style={td}>₹ {r.totalExpense}</td>
-              <td style={{
-                ...td,
-                color: r.profit >= 0 ? "green" : "red",
-                fontWeight: "bold"
-              }}>
-                ₹ {r.profit}
-              </td>
+ 
+      <div className="table-wrapper">
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th>Month</th>
+              <th>Total Income</th>
+              <th>Total Expense</th>
+              <th>Profit / Loss</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-
+          </thead>
+ 
+          <tbody>
+            {filteredReports.map((r, index) => (
+              <tr key={index}>
+                <td style={{ fontWeight:600, color:"var(--text-1)" }}>{r.month}</td>
+                <td style={{ color:"var(--green)", fontWeight:600 }}>₹ {r.totalIncome}</td>
+                <td style={{ color:"var(--amber)", fontWeight:600 }}>₹ {r.totalExpense}</td>
+                <td>
+                  <span className={r.profit >= 0 ? "profit" : "loss"}>
+                    {r.profit >= 0 ? "▲" : "▼"} ₹ {r.profit}
+                  </span>
+                </td>
+              </tr>
+            ))}
+            {filteredReports.length === 0 && (
+              <tr>
+                <td colSpan="4" style={{ textAlign:"center", color:"var(--text-3)", padding:"32px" }}>
+                  No report data available.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
-
-/* Styles */
-
-const tableStyle = {
-  width: "100%",
-  borderCollapse: "collapse",
-  marginTop: "20px"
-};
-
-const th = {
-  border: "1px solid #ccc",
-  padding: "12px",
-  background: "#eee",
-  textAlign: "center"
-};
-
-const td = {
-  border: "1px solid #ccc",
-  padding: "12px",
-  textAlign: "center"
-};
-

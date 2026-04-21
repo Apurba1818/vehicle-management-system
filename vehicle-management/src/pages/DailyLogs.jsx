@@ -558,13 +558,13 @@
 import { useState, useEffect } from "react";
 import api from "../api/axios";
 import "../styles/vms.css";
- 
+
 export default function DailyLogs() {
- 
+
   const [logs, setLogs] = useState([]);
   const [vehicles, setVehicles] = useState([]);
   const [drivers, setDrivers] = useState([]);
- 
+
   const [entry, setEntry] = useState({
     date: "",
     vehicle: "",
@@ -572,39 +572,39 @@ export default function DailyLogs() {
     income: "",
     expense: ""
   });
- 
+
   useEffect(() => {
     fetchLogs();
     fetchVehicles();
     fetchDrivers();
   }, []);
- 
+
   const fetchLogs = async () => {
     const res = await api.get("/logs");
     setLogs(res.data);
   };
- 
+
   const fetchVehicles = async () => {
     const res = await api.get("/vehicles");
     setVehicles(res.data);
   };
- 
+
   const fetchDrivers = async () => {
     const res = await api.get("/drivers");
     setDrivers(res.data);
   };
- 
+
   const handleChange = (e) => {
     setEntry({ ...entry, [e.target.name]: e.target.value });
   };
- 
+
   const addLog = async () => {
- 
+
     if (!entry.date || !entry.vehicle || !entry.driver) {
       alert("Fill required fields");
       return;
     }
- 
+
     await api.post("/logs", {
       date: entry.date,
       vehicle: entry.vehicle,
@@ -612,7 +612,7 @@ export default function DailyLogs() {
       income: entry.income || 0,
       expense: entry.expense || 0
     });
- 
+
     setEntry({
       date: "",
       vehicle: "",
@@ -620,27 +620,36 @@ export default function DailyLogs() {
       income: "",
       expense: ""
     });
- 
+
     fetchLogs();
   };
- 
+
   return (
     <div className="page">
       <div className="page-header">
         <h1 className="page-title">Daily Logs</h1>
         <p className="page-subtitle">Record trip income and expenses</p>
       </div>
- 
+
       {/* Form */}
       <div className="form-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))" }}>
+        
+        {/* Updated Date Input */}
         <input
           className="form-input"
-          type="date"
+          type="text"
           name="date"
+          placeholder="Select Date"
           value={entry.date}
           onChange={handleChange}
+          onFocus={(e) => (e.target.type = "date")}
+          onBlur={(e) => { 
+            if (!e.target.value) {
+              e.target.type = "text"; 
+            }
+          }}
         />
- 
+
         <select className="form-select" name="vehicle" value={entry.vehicle} onChange={handleChange}>
           <option value="">Select Vehicle</option>
           {vehicles.map(v => (
@@ -649,7 +658,7 @@ export default function DailyLogs() {
             </option>
           ))}
         </select>
- 
+
         <select className="form-select" name="driver" value={entry.driver} onChange={handleChange}>
           <option value="">Select Driver</option>
           {drivers.map(d => (
@@ -658,7 +667,7 @@ export default function DailyLogs() {
             </option>
           ))}
         </select>
- 
+
         <input
           className="form-input"
           name="income"
@@ -666,7 +675,7 @@ export default function DailyLogs() {
           value={entry.income}
           onChange={handleChange}
         />
- 
+
         <input
           className="form-input"
           name="expense"
@@ -674,12 +683,12 @@ export default function DailyLogs() {
           value={entry.expense}
           onChange={handleChange}
         />
- 
+
         <button className="btn btn-primary" onClick={addLog} style={{ alignSelf: "end" }}>
           + Add Log
         </button>
       </div>
- 
+
       {/* Table */}
       <div className="table-wrapper">
         <table className="data-table">
@@ -693,7 +702,7 @@ export default function DailyLogs() {
               <th>Expense</th>
             </tr>
           </thead>
- 
+
           <tbody>
             {logs.map(l => (
               <tr key={l.id}>

@@ -158,49 +158,117 @@
 //   marginTop: "20px"
 // };
 
+// import { useState, useEffect } from "react";
+// import api from "../api/axios";
+
+// export default function Income() {
+
+//   const [incomeData, setIncomeData] = useState([]);
+
+//   useEffect(() => {
+//     loadIncome();
+//   }, []);
+
+//   const loadIncome = async () => {
+//     const res = await api.get("/income");
+//     setIncomeData(res.data);
+//   };
+
+//   return (
+//     <div style={{ padding: "20px" }}>
+//       <h2>Income Summary</h2>
+
+//       <table style={table}>
+//         <thead>
+//           <tr>
+//             <th style={th}>Vehicle</th>
+//             <th style={th}>Driver</th>
+//             <th style={th}>Total Income</th>
+//           </tr>
+//         </thead>
+
+//         <tbody>
+//           {incomeData.map((i, index) => (
+//             <tr key={index}>
+//               <td style={td}>{i.vehicle}</td>
+//               <td style={td}>{i.driver}</td>
+//               <td style={td}>₹ {i.totalIncome}</td>
+//             </tr>
+//           ))}
+//         </tbody>
+//       </table>
+//     </div>
+//   );
+// }
+
+// const table = { width: "100%", borderCollapse: "collapse" };
+// const th = { border: "1px solid #ccc", padding: "10px", background: "#f4f4f4" };
+// const td = { border: "1px solid #ccc", padding: "10px", textAlign: "center" };
+
 import { useState, useEffect } from "react";
 import api from "../api/axios";
-
+import "../styles/vms.css";
+ 
 export default function Income() {
-
+ 
   const [incomeData, setIncomeData] = useState([]);
-
+ 
   useEffect(() => {
     loadIncome();
   }, []);
-
+ 
   const loadIncome = async () => {
     const res = await api.get("/income");
     setIncomeData(res.data);
   };
-
+ 
+  const totalIncome = incomeData.reduce((sum, i) => sum + Number(i.totalIncome || 0), 0);
+ 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Income Summary</h2>
-
-      <table style={table}>
-        <thead>
-          <tr>
-            <th style={th}>Vehicle</th>
-            <th style={th}>Driver</th>
-            <th style={th}>Total Income</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {incomeData.map((i, index) => (
-            <tr key={index}>
-              <td style={td}>{i.vehicle}</td>
-              <td style={td}>{i.driver}</td>
-              <td style={td}>₹ {i.totalIncome}</td>
+    <div className="page">
+      <div className="page-header">
+        <h1 className="page-title">Income Summary</h1>
+        <p className="page-subtitle">Breakdown by vehicle & driver</p>
+      </div>
+ 
+      {/* Summary stat */}
+      <div style={{ marginBottom: 20 }}>
+        <div className="stat-card" style={{ maxWidth: 260 }}>
+          <span className="stat-label">Grand Total Income</span>
+          <div className="stat-value" style={{ color:"var(--green)" }}>₹ {totalIncome}</div>
+        </div>
+      </div>
+ 
+      <div className="table-wrapper">
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Vehicle</th>
+              <th>Driver</th>
+              <th>Total Income</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+ 
+          <tbody>
+            {incomeData.map((i, index) => (
+              <tr key={index}>
+                <td><span className="badge badge-blue">{index + 1}</span></td>
+                <td style={{ fontWeight:600, color:"var(--text-1)" }}>{i.vehicle}</td>
+                <td>{i.driver}</td>
+                <td style={{ color:"var(--green)", fontWeight:600 }}>₹ {i.totalIncome}</td>
+              </tr>
+            ))}
+            {incomeData.length === 0 && (
+              <tr>
+                <td colSpan="4" style={{ textAlign:"center", color:"var(--text-3)", padding:"32px" }}>
+                  No income records found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
-
-const table = { width: "100%", borderCollapse: "collapse" };
-const th = { border: "1px solid #ccc", padding: "10px", background: "#f4f4f4" };
-const td = { border: "1px solid #ccc", padding: "10px", textAlign: "center" };

@@ -404,15 +404,167 @@
 //   textAlign: "center"
 // };
 
+// import { useState, useEffect } from "react";
+// import api from "../api/axios";
+
+// export default function DailyLogs() {
+
+//   const [logs, setLogs] = useState([]);
+//   const [vehicles, setVehicles] = useState([]);
+//   const [drivers, setDrivers] = useState([]);
+
+//   const [entry, setEntry] = useState({
+//     date: "",
+//     vehicle: "",
+//     driver: "",
+//     income: "",
+//     expense: ""
+//   });
+
+//   useEffect(() => {
+//     fetchLogs();
+//     fetchVehicles();
+//     fetchDrivers();
+//   }, []);
+
+//   const fetchLogs = async () => {
+//     const res = await api.get("/logs");
+//     setLogs(res.data);
+//   };
+
+//   const fetchVehicles = async () => {
+//     const res = await api.get("/vehicles");
+//     setVehicles(res.data);
+//   };
+
+//   const fetchDrivers = async () => {
+//     const res = await api.get("/drivers");
+//     setDrivers(res.data);
+//   };
+
+//   const handleChange = (e) => {
+//     setEntry({ ...entry, [e.target.name]: e.target.value });
+//   };
+
+//   const addLog = async () => {
+
+//     if (!entry.date || !entry.vehicle || !entry.driver) {
+//       alert("Fill required fields");
+//       return;
+//     }
+
+//     await api.post("/logs", {
+//       date: entry.date,
+//       vehicle: entry.vehicle,
+//       driver: entry.driver,
+//       income: entry.income || 0,
+//       expense: entry.expense || 0
+//     });
+
+//     setEntry({
+//       date: "",
+//       vehicle: "",
+//       driver: "",
+//       income: "",
+//       expense: ""
+//     });
+
+//     fetchLogs();
+//   };
+
+//   return (
+//     <div style={{ padding: "20px" }}>
+//       <h2>Daily Logs</h2>
+
+//       <div style={formContainer}>
+//         <input
+//           type="date"
+//           name="date"
+//           value={entry.date}
+//           onChange={handleChange}
+//         />
+
+//         <select name="vehicle" value={entry.vehicle} onChange={handleChange}>
+//           <option value="">Select Vehicle</option>
+//           {vehicles.map(v => (
+//             <option key={v.id} value={v.number}>
+//               {v.number}
+//             </option>
+//           ))}
+//         </select>
+
+//         <select name="driver" value={entry.driver} onChange={handleChange}>
+//           <option value="">Select Driver</option>
+//           {drivers.map(d => (
+//             <option key={d.id} value={d.name}>
+//               {d.name}
+//             </option>
+//           ))}
+//         </select>
+
+//         <input
+//           name="income"
+//           placeholder="Income"
+//           value={entry.income}
+//           onChange={handleChange}
+//         />
+
+//         <input
+//           name="expense"
+//           placeholder="Expense"
+//           value={entry.expense}
+//           onChange={handleChange}
+//         />
+
+//         <button onClick={addLog}>Add Log</button>
+//       </div>
+
+//       <table border="1" width="100%" style={{ marginTop: "20px" }}>
+//         <thead>
+//           <tr>
+//             <th>ID</th>
+//             <th>Date</th>
+//             <th>Vehicle</th>
+//             <th>Driver</th>
+//             <th>Income</th>
+//             <th>Expense</th>
+//           </tr>
+//         </thead>
+
+//         <tbody>
+//           {logs.map(l => (
+//             <tr key={l.id}>
+//               <td>{l.id}</td>
+//               <td>{l.date}</td>
+//               <td>{l.vehicle}</td>
+//               <td>{l.driver}</td>
+//               <td>₹ {l.income}</td>
+//               <td>₹ {l.expense}</td>
+//             </tr>
+//           ))}
+//         </tbody>
+//       </table>
+//     </div>
+//   );
+// }
+
+// const formContainer = {
+//   display: "flex",
+//   gap: "10px",
+//   flexWrap: "wrap",
+//   marginBottom: "20px"
+// };
+
 import { useState, useEffect } from "react";
 import api from "../api/axios";
-
+import "../styles/vms.css";
+ 
 export default function DailyLogs() {
-
+ 
   const [logs, setLogs] = useState([]);
   const [vehicles, setVehicles] = useState([]);
   const [drivers, setDrivers] = useState([]);
-
+ 
   const [entry, setEntry] = useState({
     date: "",
     vehicle: "",
@@ -420,39 +572,39 @@ export default function DailyLogs() {
     income: "",
     expense: ""
   });
-
+ 
   useEffect(() => {
     fetchLogs();
     fetchVehicles();
     fetchDrivers();
   }, []);
-
+ 
   const fetchLogs = async () => {
     const res = await api.get("/logs");
     setLogs(res.data);
   };
-
+ 
   const fetchVehicles = async () => {
     const res = await api.get("/vehicles");
     setVehicles(res.data);
   };
-
+ 
   const fetchDrivers = async () => {
     const res = await api.get("/drivers");
     setDrivers(res.data);
   };
-
+ 
   const handleChange = (e) => {
     setEntry({ ...entry, [e.target.name]: e.target.value });
   };
-
+ 
   const addLog = async () => {
-
+ 
     if (!entry.date || !entry.vehicle || !entry.driver) {
       alert("Fill required fields");
       return;
     }
-
+ 
     await api.post("/logs", {
       date: entry.date,
       vehicle: entry.vehicle,
@@ -460,7 +612,7 @@ export default function DailyLogs() {
       income: entry.income || 0,
       expense: entry.expense || 0
     });
-
+ 
     setEntry({
       date: "",
       vehicle: "",
@@ -468,23 +620,28 @@ export default function DailyLogs() {
       income: "",
       expense: ""
     });
-
+ 
     fetchLogs();
   };
-
+ 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Daily Logs</h2>
-
-      <div style={formContainer}>
+    <div className="page">
+      <div className="page-header">
+        <h1 className="page-title">Daily Logs</h1>
+        <p className="page-subtitle">Record trip income and expenses</p>
+      </div>
+ 
+      {/* Form */}
+      <div className="form-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))" }}>
         <input
+          className="form-input"
           type="date"
           name="date"
           value={entry.date}
           onChange={handleChange}
         />
-
-        <select name="vehicle" value={entry.vehicle} onChange={handleChange}>
+ 
+        <select className="form-select" name="vehicle" value={entry.vehicle} onChange={handleChange}>
           <option value="">Select Vehicle</option>
           {vehicles.map(v => (
             <option key={v.id} value={v.number}>
@@ -492,8 +649,8 @@ export default function DailyLogs() {
             </option>
           ))}
         </select>
-
-        <select name="driver" value={entry.driver} onChange={handleChange}>
+ 
+        <select className="form-select" name="driver" value={entry.driver} onChange={handleChange}>
           <option value="">Select Driver</option>
           {drivers.map(d => (
             <option key={d.id} value={d.name}>
@@ -501,57 +658,63 @@ export default function DailyLogs() {
             </option>
           ))}
         </select>
-
+ 
         <input
+          className="form-input"
           name="income"
-          placeholder="Income"
+          placeholder="Income (₹)"
           value={entry.income}
           onChange={handleChange}
         />
-
+ 
         <input
+          className="form-input"
           name="expense"
-          placeholder="Expense"
+          placeholder="Expense (₹)"
           value={entry.expense}
           onChange={handleChange}
         />
-
-        <button onClick={addLog}>Add Log</button>
+ 
+        <button className="btn btn-primary" onClick={addLog} style={{ alignSelf: "end" }}>
+          + Add Log
+        </button>
       </div>
-
-      <table border="1" width="100%" style={{ marginTop: "20px" }}>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Date</th>
-            <th>Vehicle</th>
-            <th>Driver</th>
-            <th>Income</th>
-            <th>Expense</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {logs.map(l => (
-            <tr key={l.id}>
-              <td>{l.id}</td>
-              <td>{l.date}</td>
-              <td>{l.vehicle}</td>
-              <td>{l.driver}</td>
-              <td>₹ {l.income}</td>
-              <td>₹ {l.expense}</td>
+ 
+      {/* Table */}
+      <div className="table-wrapper">
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Date</th>
+              <th>Vehicle</th>
+              <th>Driver</th>
+              <th>Income</th>
+              <th>Expense</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+ 
+          <tbody>
+            {logs.map(l => (
+              <tr key={l.id}>
+                <td><span className="badge badge-blue">#{l.id}</span></td>
+                <td>{l.date}</td>
+                <td style={{ fontWeight: 600, color: "var(--text-1)" }}>{l.vehicle}</td>
+                <td>{l.driver}</td>
+                <td style={{ color: "var(--green)", fontWeight: 600 }}>₹ {l.income}</td>
+                <td style={{ color: "var(--amber)", fontWeight: 600 }}>₹ {l.expense}</td>
+              </tr>
+            ))}
+            {logs.length === 0 && (
+              <tr>
+                <td colSpan="6" style={{ textAlign:"center", color:"var(--text-3)", padding:"32px" }}>
+                  No logs yet. Add your first entry above.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
-
-const formContainer = {
-  display: "flex",
-  gap: "10px",
-  flexWrap: "wrap",
-  marginBottom: "20px"
-};
-

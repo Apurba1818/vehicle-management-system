@@ -239,75 +239,164 @@
 //   fontWeight: "bold"
 // };
 
+// import { useState, useEffect } from "react";
+// import api from "../api/axios";
+
+// export default function Settings() {
+
+//   const [settings, setSettings] = useState({
+//     ownerName: "",
+//     businessName: "",
+//     contact: "",
+//     currency: "₹"
+//   });
+
+//   useEffect(() => {
+//     loadSettings();
+//   }, []);
+
+//   const loadSettings = async () => {
+//     const res = await api.get("/settings");
+//     if(res.data){
+//       setSettings(res.data);
+//     }
+//   };
+
+//   const handleChange = (e) => {
+//     setSettings({ ...settings, [e.target.name]: e.target.value });
+//   };
+
+//   const saveSettings = async () => {
+//     await api.post("/settings", settings);
+//     alert("Settings saved");
+//   };
+
+//   return (
+//     <div style={{ padding:"20px" }}>
+//       <h2>Business Settings</h2>
+
+//       <input name="ownerName" placeholder="Owner Name"
+//         value={settings.ownerName} onChange={handleChange} style={input}/>
+
+//       <input name="businessName" placeholder="Business Name"
+//         value={settings.businessName} onChange={handleChange} style={input}/>
+
+//       <input name="contact" placeholder="Contact"
+//         value={settings.contact} onChange={handleChange} style={input}/>
+
+//       <select name="currency" value={settings.currency} onChange={handleChange} style={input}>
+//         <option value="₹">₹ Rupee</option>
+//         <option value="$">$ Dollar</option>
+//         <option value="€">€ Euro</option>
+//       </select>
+
+//       <br/><br/>
+//       <button onClick={saveSettings} style={btn}>
+//         Save Settings
+//       </button>
+//     </div>
+//   );
+// }
+
+// const input = {
+//   display:"block",
+//   margin:"10px 0",
+//   padding:"10px",
+//   width:"300px"
+// };
+
+// const btn = {
+//   padding:"10px 20px",
+//   background:"orange",
+//   border:"none",
+//   cursor:"pointer"
+// };
+
 import { useState, useEffect } from "react";
 import api from "../api/axios";
-
+import "../styles/vms.css";
+ 
 export default function Settings() {
-
+ 
   const [settings, setSettings] = useState({
     ownerName: "",
     businessName: "",
     contact: "",
     currency: "₹"
   });
-
+ 
   useEffect(() => {
     loadSettings();
   }, []);
-
+ 
   const loadSettings = async () => {
     const res = await api.get("/settings");
     if(res.data){
       setSettings(res.data);
     }
   };
-
+ 
   const handleChange = (e) => {
     setSettings({ ...settings, [e.target.name]: e.target.value });
   };
-
+ 
   const saveSettings = async () => {
     await api.post("/settings", settings);
     alert("Settings saved");
   };
-
+ 
+  const fields = [
+    { name: "ownerName",     label: "Owner Name",     placeholder: "Enter owner name",     type: "text" },
+    { name: "businessName",  label: "Business Name",  placeholder: "Enter business name",  type: "text" },
+    { name: "contact",       label: "Contact Number", placeholder: "Enter contact number", type: "text" },
+  ];
+ 
   return (
-    <div style={{ padding:"20px" }}>
-      <h2>Business Settings</h2>
-
-      <input name="ownerName" placeholder="Owner Name"
-        value={settings.ownerName} onChange={handleChange} style={input}/>
-
-      <input name="businessName" placeholder="Business Name"
-        value={settings.businessName} onChange={handleChange} style={input}/>
-
-      <input name="contact" placeholder="Contact"
-        value={settings.contact} onChange={handleChange} style={input}/>
-
-      <select name="currency" value={settings.currency} onChange={handleChange} style={input}>
-        <option value="₹">₹ Rupee</option>
-        <option value="$">$ Dollar</option>
-        <option value="€">€ Euro</option>
-      </select>
-
-      <br/><br/>
-      <button onClick={saveSettings} style={btn}>
-        Save Settings
-      </button>
+    <div className="page">
+      <div className="page-header">
+        <h1 className="page-title">Business Settings</h1>
+        <p className="page-subtitle">Configure your business profile</p>
+      </div>
+ 
+      <div className="settings-card">
+        <div className="settings-title">Business Details</div>
+ 
+        {fields.map(({ name, label, placeholder, type }) => (
+          <div className="settings-field" key={name}>
+            <label className="settings-label">{label}</label>
+            <input
+              className="form-input"
+              name={name}
+              type={type}
+              placeholder={placeholder}
+              value={settings[name]}
+              onChange={handleChange}
+              style={{ maxWidth: "100%" }}
+            />
+          </div>
+        ))}
+ 
+        <div className="settings-field">
+          <label className="settings-label">Currency</label>
+          <select
+            className="form-select"
+            name="currency"
+            value={settings.currency}
+            onChange={handleChange}
+            style={{ maxWidth: "100%" }}
+          >
+            <option value="₹">₹ Indian Rupee (INR)</option>
+            <option value="$">$ US Dollar (USD)</option>
+            <option value="€">€ Euro (EUR)</option>
+          </select>
+        </div>
+ 
+        <div style={{ marginTop: 24 }}>
+          <button className="btn btn-primary" onClick={saveSettings}>
+            Save Settings
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
-
-const input = {
-  display:"block",
-  margin:"10px 0",
-  padding:"10px",
-  width:"300px"
-};
-
-const btn = {
-  padding:"10px 20px",
-  background:"orange",
-  border:"none",
-  cursor:"pointer"
-};
